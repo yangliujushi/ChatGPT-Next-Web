@@ -37,8 +37,14 @@ export const getServerSideConfig = () => {
     );
   }
 
+// 增加Key池实现多Key 轮询
+// 从这里开始
+  const apiKeys = (process.env.OPENAI_API_KEY ?? '').split(',')
+  const apiKey = apiKeys.at(Math.floor(Math.random() * apiKeys.length)) ?? ''
+
+
   return {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey, // 到这结束
     code: process.env.CODE,
     codes: ACCESS_CODES,
     needCode: ACCESS_CODES.size > 0,
@@ -46,7 +52,8 @@ export const getServerSideConfig = () => {
     proxyUrl: process.env.PROXY_URL,
     isVercel: !!process.env.VERCEL,
     hideUserApiKey: !!process.env.HIDE_USER_API_KEY,
-    disableGPT4: !!process.env.DISABLE_GPT4,
+    enableGPT4: !process.env.DISABLE_GPT4,
     hideBalanceQuery: !!process.env.HIDE_BALANCE_QUERY,
   };
 };
+
